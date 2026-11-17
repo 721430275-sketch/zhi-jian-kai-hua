@@ -1,0 +1,9 @@
+﻿output/
+_backup*/
+_evidence*/
+_staging*/
+_sync_backup*/
+server.log
+server.err
+process.exit(1)
+science-preview-haitang.*

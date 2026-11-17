@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eef3f9" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%231a2823'/%3E%3Cg fill='%23f29aaa'%3E%3Cellipse cx='32' cy='14' rx='9' ry='15'/%3E%3Cellipse cx='32' cy='50' rx='9' ry='15'/%3E%3Cellipse cx='14' cy='32' rx='15' ry='9'/%3E%3Cellipse cx='50' cy='32' rx='15' ry='9'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='8' fill='%23f6cf70'/%3E%3C/svg%3E" />
+  <title>指尖开花第二版</title>
+  <link rel="stylesheet" href="./styles.css?v=20261115-tju-theme" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="指尖开花第二版首页">
+        <span class="brand-mark">FF<span>02</span></span>
+        <span class="brand-copy"><b>指尖开花</b><small>第二版</small></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="connection-pill" id="connectionPill"><i></i>未连接摄像头</span>
+        <button class="text-btn" id="helpBtn" type="button">使用说明</button>
+        <button class="outline-btn" id="topCameraBtn" type="button">开启摄像头</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="flower-scroll-hint">左右滑动查看全部花种</p><div class="flower-switcher" id="flowerSwitcher" role="group" aria-label="选择花朵"></div>
+
+          <div class="hero-emblem-slot">
+            <div class="hero-emblem">
+              <img src="./tju-badge.svg" alt="天津大学校徽" width="196" height="196" />
+            </div>
+          </div>
+
+          <div class="camera-card" aria-label="摄像头预览">
+            <div class="camera-head"><div><p class="eyebrow">LIVE HAND TRACKING</p><h3>右手识别</h3></div><button class="small-btn" id="cameraBtn" type="button">开启</button></div>
+            <div class="camera-view"><video id="cameraVideo" playsinline muted autoplay></video><canvas id="skeletonCanvas" aria-hidden="true"></canvas><div class="camera-placeholder" id="cameraPlaceholder"><span>◌</span><b>等待摄像头</b><small>点击“开启”开始识别</small></div><div class="camera-badge" id="cameraBadge">640 × 480</div></div>
+            <div class="tracking-readout" hidden><div><span>拇指—食指距离</span><b id="pinchReadout">—</b></div><div><span>当前来源</span><b id="sourceReadout">鼠标备用</b></div><div><span>识别状态</span><b id="handReadout">未检测</b></div></div>
+          </div>
+
+          <div class="gesture-explainer">
+            <div class="gesture-icon" aria-hidden="true"><span class="finger finger-a"></span><span class="finger finger-b"></span><span class="gesture-dot"></span></div>
+            <div><b>右手捏合</b><span>捏紧 = 合拢 · 张开 = 盛放</span></div>
+            <kbd>← →</kbd>
+            <div class="gesture-arrow-copy"><b>左右移动</b><span>切换花朵</span></div>
+          </div>
+          <div class="bottom-left-dock" role="group" aria-label="快捷操作">
+            <div class="control-actions"><button class="solid-btn" id="playBtn" type="button">▶ 播放开花</button><button class="outline-btn" id="recordBtn" type="button">● 生成动效视频</button></div>
+            <div class="iter5-actions"><button id="tourBtn" type="button">开始巡演</button><button id="tourExitBtn" type="button" hidden>退出巡演</button><button id="summaryBtn" type="button">观察小结</button></div>
+            <p id="tourStatus" class="iter5-status" aria-live="polite" hidden></p>
+          </div>
+          <p class="hero-credit">赵晨轩 3026001419</p>
+        </div>
+
+        <aside class="science-panel science-side" aria-label="花朵科普">
+          <div class="science-panel-head">
+            <p class="eyebrow">科普笔记</p>
+            <a class="science-deep" id="scienceDeepLink" href="https://www.iplant.cn/z/frps/26307" target="_blank" rel="noopener">深入了解</a>
+            <p class="science-eyebrow" id="scienceEyebrow">花苞阶段</p>
+          </div>
+          <div class="observe-prompts"><p><b>看哪里</b> <span id="scienceLook"></span></p><p><b>想一想</b> <span id="scienceThink"></span> <button id="saveQuestionBtn" type="button">记下这个问题</button></p></div>
+          <h3 id="scienceTitle">萼片还护着花瓣</h3>
+          <div class="science-body-wrap"><p id="scienceBody"></p></div><span id="scienceAnnouncement" class="sr-only" aria-live="polite"></span>
+        </aside>
+        <div class="photo-plumbing" hidden aria-hidden="true">
+          <time id="photoStamp">刚刚生成</time>
+          <canvas id="photoCanvas" width="720" height="560"></canvas>
+          <span class="photo-corner">01 / 22</span>
+          <b id="photoName">牡丹</b><span id="photoLatin">Paeonia lactiflora</span>
+          <button id="downloadPhotoBtn" type="button">↓</button>
+          <button id="generatePhotoBtn" type="button">生成</button>
+        </div>
+      </section>
+
+      <section class="studio-section" aria-label="开花动态影像">
+        <div class="section-heading"><div><p class="eyebrow">THE BLOOMING VIDEO</p><h2>动态开花影像</h2></div><div class="live-state"><i></i><span id="stageState">等待手势</span></div></div>
+        <div class="studio-grid">
+          <div class="stage-card">
+            <div class="stage-topline"><span></span><span id="stageCounter">01 / 22</span></div>
+            <canvas id="flowerCanvas" width="1100" height="760" aria-label="花朵开合动画"></canvas>
+            <div class="stage-foot">
+              <div class="stage-info"><div><small id="stageLatin">Paeonia lactiflora</small><strong id="stageName">牡丹</strong></div><div class="stage-percent"><b id="progressValue">4%</b><span>开放</span></div></div>
+              <div class="stage-progress"><span id="stageProgressBar"></span></div>
+            </div>
+          </div>
+
+          <aside class="control-card">
+            <div class="control-card-head"><div><p class="eyebrow">FRAME CONTROL</p><h3>开合进度</h3></div><span class="mode-tag" id="modeTag">鼠标备用</span></div>
+            <div class="range-wrap"><input id="progressRange" type="range" min="0" max="1" step="0.001" value="0.04" aria-label="花朵开合进度" /><div class="range-labels"><button type="button" data-progress="0">花苞</button><button type="button" data-progress="0.28">初开</button><button type="button" data-progress="0.62">半开</button><button type="button" data-progress="0.9">盛放</button></div></div>
+            <p class="control-hint" id="controlHint">拖动进度条或捏合控制开合；开启摄像头后向上挥手打开全部花名，指尖悬停并用拇指食指捏合确认，也可左右挥手或按方向键切花。</p>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-bar"><span>指尖开花第二版 · 本地运行 · 不上传摄像头画面</span><span>← 左右切换花朵 · 空格播放 · P 生成照片</span></footer>
+  </div>
+
+  <div class="welcome-layer" id="welcomeLayer" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-card"><p class="eyebrow">FINGERTIP FLOWER / VERSION 02</p><h2 id="welcomeTitle">一朵花，<em>从你的手里打开。</em></h2><p>捏合或拖动控制花朵开合；左右挥手或方向键切花，上划打开花名列表。</p><div class="welcome-actions"><button class="solid-btn" id="welcomeCameraBtn" type="button">开启摄像头</button><button class="outline-btn" id="welcomeTryBtn" type="button">先试玩</button></div></div>
+  </div>
+
+  <aside class="iter5-coach" id="coach" aria-live="polite" hidden><b id="coachCount"></b><p id="coachText"></p><button id="coachSkip" type="button">跳过引导</button></aside>
+  <div class="iter5-overlay" id="summaryLayer" hidden><section class="iter5-summary" role="dialog" aria-modal="true" aria-labelledby="summaryTitle"><h2 id="summaryTitle">观察小结</h2><p>记录仅保存在本机，不上传；不包含摄像头画面。</p><div id="summaryList"></div><div class="iter5-actions"><button id="summaryDownload" type="button">下载小结</button><button id="summaryClear" type="button">清空记录</button><button id="summaryClose" type="button">关闭</button></div></section></div>
+  <div class="iter5-overlay" id="flowerListLayer" hidden><section class="iter5-summary flower-list-panel" role="dialog" aria-modal="true" aria-labelledby="flowerListTitle"><h2 id="flowerListTitle">全部花名</h2><p>指尖移动光标高亮花名，拇指与食指捏合确认；也可直接点选。</p><div id="flowerList" class="flower-list"></div><button id="flowerListClose" type="button">关闭</button></section><div id="handCursor" class="hand-cursor" hidden aria-hidden="true"></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <video id="photoVideo" preload="auto" muted playsinline hidden></video>
+  <video id="bloomVideo" preload="auto" muted playsinline hidden></video>
+  <script src="./app.js?v=20261115-tju-theme"></script>
+</body>
+</html>
+
